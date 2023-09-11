@@ -9,26 +9,17 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 
 class Cripto():
     def __init__(self):
         self.site_link = 'https://coinmarketcap.com/'
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
-        self.site_map = {
-            'cripto':{
-                'name': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[3]/div/a/div/div",# /html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[2]/td[3]/div/a/div/div
-                'priece': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[4]/div/a/span",
-                'porcentagem1': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[5]/span",
-                'porcentagem2': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[6]/span",
-                'porcentagem3': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[7]/span",
-                'market_cap': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[8]/p/span[2]",
-                'volume24h': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[9]/div/a/p",
-                'circulating_supply': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[10]/div/div/p",
-                
-            }
-        }
-        self.contador = 1
+   
+            
     def main(self):
         self.abre()
         sleep(2)
@@ -36,18 +27,59 @@ class Cripto():
         sleep(1010000010)
 
     def raspagem_de_dados(self):
-     for i in range(len(self.site_map['cripto'])):
-        key = list(self.site_map['cripto'].keys())[i]
-        value = self.site_map['cripto'][key]
-        raspa = self.driver.find_element(By.XPATH, value)
-        raspa_txt = raspa.text
-        print(raspa_txt)
+        self.contador = 1
+        while True:
+            self.site_map = {
+        'cripto':{
+            'name': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[3]/div/a/div/div/p",
+            'priece': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[4]/div/a/span",
+            'porcentagem1': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[5]/span",
+            'porcentagem2': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[6]/span",
+            'porcentagem3': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[7]/span",
+            'market_cap': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[8]/p/span[2]",
+            'volume24h': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[9]/div/a/p",
+            'circulating_supply': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[{self.contador}]/td[10]/div/div/p",
+            'next': f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[6]/div[1]/div/ul/li[10]"
+            
+        }
+        }
+            raspan = self.driver.find_element(By.XPATH,self.site_map['cripto']['name']).text
+            raspap = self.driver.find_element(By.XPATH,self.site_map['cripto']['priece']).text
+            raspaporc1 = self.driver.find_element(By.XPATH,self.site_map['cripto']['porcentagem1']).text
+            raspaporc2 = self.driver.find_element(By.XPATH,self.site_map['cripto']['porcentagem2']).text
+            raspaporc3 = self.driver.find_element(By.XPATH,self.site_map['cripto']['porcentagem3']).text
+            raspamktc = self.driver.find_element(By.XPATH,self.site_map['cripto']['market_cap']).text
+            raspavol24 = self.driver.find_element(By.XPATH,self.site_map['cripto']['volume24h']).text
+            raspacrcs = self.driver.find_element(By.XPATH,self.site_map['cripto']['circulating_supply']).text
+
+
+            print(raspan,raspap,raspaporc1,raspaporc2,raspaporc3,raspamktc,raspavol24,raspacrcs)
+            self.contador += 1 
+            actions = ActionChains(self.driver)
+            #solução que encontrei para tecnica de lazy upload da pagina
+            actions.send_keys(Keys.PAGE_DOWN).perform()
+            actions.send_keys(Keys.END).perform()
+        
+            print(self.contador)
+            if self.contador == 10:
+                sleep(4)
+                if not self.elemento_xpath_existe(f"/html/body/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[6]/div[1]/div/ul/li[10]"):
+                    try:
+                        botao_proximo = self.driver.find_element(By.CSS_SELECTOR,self.site_map['cripto']['next'])
+                        botao_proximo.click()
+                        sleep(4)
+                        print('navegando para proxima pagina!!!')
+                        self.contador = 1
+                        sleep(2)
+                    except:
+                        print('nao ah mais  paginas!')
+                        break
 
 
       
-    def elemento_xpath_existe(self, xpath):
+    def elemento_xpath_existe(self,xpath):
         try:
-            self.driver.find_element(By.CSS_SELECTOR, xpath)
+            self.driver.find_element(By.XPATH, xpath)
             return True
         except:
             return False
@@ -80,6 +112,8 @@ class Cripto():
         print('Planilha criada com sucesso!')
     def abre(self):
         self.driver.get(self.site_link)
+
+
 
 cripto =Cripto()
 cripto.main()
