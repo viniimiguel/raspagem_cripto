@@ -10,6 +10,7 @@ from email import encoders
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Cripto():
@@ -35,6 +36,7 @@ class Cripto():
         sleep(1279)
 
     def raspa_dados(self):
+        global xpaths
         sleep(5)
         self.contador = 1
         while True:
@@ -51,6 +53,7 @@ class Cripto():
             }
             try:
                 self.lazy_upload()
+            
 
                 n = self.driver.find_element(By.XPATH, xpaths['moedas']['nome']).text
                 p = self.driver.find_element(By.XPATH, xpaths['moedas']['preco']).text
@@ -58,9 +61,6 @@ class Cripto():
                 t2 = self.driver.find_element(By.XPATH, xpaths['moedas']['toptier_vol']).text
                 lis = [f'{n}',f'{p}',f'{t1}',f'{t2}']
                 print(lis[0],lis[1],lis[2],lis[3])
-
-
-                sleep(0.5)
                 print(self.contador)
                 self.contador += 1
             
@@ -70,7 +70,9 @@ class Cripto():
                     if botao_proximo:
                         botao_proximo.click()
                         sleep(4)
-                        self.driver.find_element(By.XPATH,xpaths['moedas']['cancel'])
+                        self.cancel()
+                        sleep(2)
+                        self.sobe()
                         print('navegando para proxima pagina !!!')
                         self.contador += 1
                 except:
@@ -82,6 +84,20 @@ class Cripto():
 
     def lazy_upload(self):
         self.driver.execute_script("window.scrollBy(0,800);")
+
+    def sobe(self):
+        actions = ActionChains(self.driver)
+        actions.send_keys(Keys.HOME).perform
+
+    def cancel(self):
+        cancela = self.driver.find_element(By.XPATH, xpaths['moedas']['cancel'])
+        if cancela:
+            print('cancelando')
+            print(cancela)
+            cancela.click()
+    
+
+
     
 
 
