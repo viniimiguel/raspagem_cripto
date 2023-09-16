@@ -44,7 +44,8 @@ class Cripto():
                     'preco': f'/html/body/div[1]/div[4]/div/div/div/coins-list-v2/div/div/table/tbody/tr[{self.contador}]/td[4]/div',
                     'total_vol': f'/html/body/div[1]/div[4]/div/div/div/coins-list-v2/div/div/table/tbody/tr[{self.contador}]/td[6]/div',
                     'toptier_vol': f'/html/body/div[1]/div[4]/div/div/div/coins-list-v2/div/div/table/tbody/tr[{self.contador}]/td[7]/div',
-                    'next': f'/html/body/div[1]/div[4]/div/div/div/coins-list-v2/div/div/div[2]/div[2]/a'
+                    'next': f'/html/body/div[1]/div[4]/div/div/div/coins-list-v2/div/div/div[2]/div[2]/a',
+                    'cancel': f'/html/body/div[5]/div/div/div[1]/h3/button/span'
                 }   
                     
             }
@@ -69,6 +70,7 @@ class Cripto():
                     if botao_proximo:
                         botao_proximo.click()
                         sleep(4)
+                        self.driver.find_element(By.XPATH,xpaths['moedas']['cancel'])
                         print('navegando para proxima pagina !!!')
                         self.contador += 1
                 except:
@@ -80,6 +82,7 @@ class Cripto():
 
     def lazy_upload(self):
         self.driver.execute_script("window.scrollBy(0,800);")
+    
 
 
 
