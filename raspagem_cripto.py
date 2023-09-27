@@ -26,14 +26,16 @@ class Cripto():
         sleep(123123213)
 
     def raspagem(self):
-        self.site_map = {
-            'xp':{
-                'nome': '/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[1]/td[2]/div/a/div/span[1]',
-                'preco': '/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[1]/td[3]/span',
-                'change': '/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[1]/td[5]/span',
-            }
-        }
+        contador = 1
         while True:
+            self.site_map = {
+                'xp':{
+                    'nome': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[2]/div/a/div/span[1]',
+                    'preco': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[3]/span',
+                    'change': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[5]/span',
+                    'passa': '/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[4]/nav/ul/li[18]/button/svg',
+                }
+            }
             try:
                 nome = self.driver.find_element(By.XPATH,self.site_map['xp']['nome']).text
                 preco = self.driver.find_element(By.XPATH,self.site_map['xp']['preco']).text
@@ -42,12 +44,20 @@ class Cripto():
                 print(nome)
                 print(preco)
                 print(change)
-                
+                contador += 1
             except NoSuchElementException:
-                break
+                passa = self.driver.find_element(By.XPATH, self.site_map['xp']['passa'])
+                if passa:
+                    passa.click()
+                    sleep(3)
+                else:
+                    break
+                
 
             except:
-                pass
+                print('houve algo inesperado!!')
+                break
+
 
     def lazy_upload(self):
         pass
