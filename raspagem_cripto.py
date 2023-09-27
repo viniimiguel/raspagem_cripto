@@ -8,6 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 
 
@@ -33,7 +35,7 @@ class Cripto():
                     'nome': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[2]/div/a/div/span[1]',
                     'preco': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[3]/span',
                     'change': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[3]/table/tbody/tr[{contador}]/td[5]/span',
-                    'passa': '/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[4]/nav/ul/li[18]/button/svg',
+                    'passa': f'/html/body/div[1]/div/div/div/article/div/div[7]/div/div/div/div/div/div[4]/nav/ul/li[18]',
                 }
             }
             try:
@@ -45,12 +47,20 @@ class Cripto():
                 print(preco)
                 print(change)
                 contador += 1
+                sleep(0.5)
+
             except NoSuchElementException:
-                passa = self.driver.find_element(By.XPATH, self.site_map['xp']['passa'])
-                if passa:
-                    passa.click()
-                    sleep(3)
-                else:
+                self.lazy_upload()
+                sleep(2)
+                try:
+                    passa = self.driver.find_element(By.XPATH, self.site_map['xp']['passa'])
+                    if passa:
+                        passa.click()
+                        sleep(3)
+                    else:
+                        break
+                except:
+                    print('xpath nao encontrado!!! ')
                     break
                 
 
@@ -60,7 +70,9 @@ class Cripto():
 
 
     def lazy_upload(self):
-        pass
+        for i in range(0,3):
+            actions = ActionChains(self.driver)
+            actions.send_keys(Keys.PAGE_DOWN).perform()
 
     def planilha(self):
         pass
