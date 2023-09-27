@@ -29,6 +29,7 @@ class Cripto():
 
     def raspagem(self):
         contador = 1
+        paginas = 1
         while True:
             self.site_map = {
                 'xp':{
@@ -57,6 +58,9 @@ class Cripto():
                     if passa:
                         passa.click()
                         sleep(3)
+                        contador = 1
+                        paginas += 1
+                        print(f'voce esta na pagina {paginas}')
                     else:
                         break
                 except:
