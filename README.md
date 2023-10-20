@@ -1,4 +1,4 @@
-# raspagem_cripto
+# raspagem_cripto <img align="center" alt="html5" src="https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white"/> <img align="center" alt="html5" src="https://img.shields.io/badge/-selenium-%43B02A?style=for-the-badge&logo=selenium&logoColor=white"/>
 
 ## Web scraping realizado em um site de criptomoedas em tempo real, onde o script coleta o nome, preço e variação (change) de cada criptomoeda existente em tempo real.
 
